@@ -21,7 +21,7 @@ from random import randrange
 import time
 
 def yourScore(score):
-    value = scoreFont.render("Your Score: " + str(score), True, yellow)
+    value = scoreFont.render(f'Your Score: {str(score)}', True, yellow)
     screen.blit(value, [0, 0])
 
 
@@ -43,23 +43,28 @@ def createFood():
 
 
 def findDirection(x1_change, y1_change, gameOver):
+    pause = False
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             gameOver = True
-        if event.type == pygame.KEYDOWN:
+        elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 x1_change = -snake_block
                 y1_change = 0
-            if event.key == pygame.K_RIGHT:
+            elif event.key == pygame.K_RIGHT:
                 x1_change = snake_block
                 y1_change = 0
-            if event.key == pygame.K_UP:
+            elif event.key == pygame.K_UP:
                 x1_change = 0
                 y1_change = -snake_block
-            if event.key == pygame.K_DOWN:
+            elif event.key == pygame.K_DOWN:
                 x1_change = 0
                 y1_change = snake_block
-    return (x1_change, y1_change, gameOver)
+            elif event.key == pygame.K_p:
+                pause = True
+            elif event.key == pygame.K_s:
+                pause = False
+    return (x1_change, y1_change, gameOver, pause)
 
 
 def checkSnakeAte(snakeX, snakeY, foodX, foodY, snakeLength):
@@ -72,6 +77,20 @@ def checkSnakeAte(snakeX, snakeY, foodX, foodY, snakeLength):
 
 def checkSnakeHitWalls(x1, y1):
     return x1 >= width or x1 < 0 or y1 >= height or y1 < 0
+
+
+def checkPause(pause):
+    if pause:
+        message("Game Paused. press 'S' to continue ", white)
+        pygame.display.update()
+    while pause:
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_p:
+                    pause = True
+                if event.key == pygame.K_s:
+                    pause = False
+    return pause
 
 
 def checkQuitOrContinue(gameClose, gameOver, loopAgain):
@@ -125,7 +144,7 @@ def gameLoop():
         gameClose, gameOver = checkGameClose(gameClose, gameOver, snakeLength)
 
         # Get change in snake movement
-        x1_change, y1_change, gameOver = findDirection(x1_change, y1_change, gameOver)
+        x1_change, y1_change, gameOver, pause = findDirection(x1_change, y1_change, gameOver)
         x1 += x1_change
         y1 += y1_change
 
