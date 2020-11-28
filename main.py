@@ -80,15 +80,26 @@ def findDirection(x1_change, y1_change, gameOver):
 
 
 def checkSnakeAte(snakeX, snakeY, foodX, foodY, snakeLength):
-    if snakeX == foodX and snakeY == foodY:
+    ateFood = snakeX == foodX and snakeY == foodY
+    if ateFood:
         foodX, foodY = createFood()
         snakeLength += 1
         print("yummy")
-    return foodX, foodY, snakeLength
+    return foodX, foodY, snakeLength, ateFood
 
 
 def checkSnakeHitWalls(x1, y1):
     return x1 >= width or x1 < 0 or y1 >= height or y1 < 0
+
+
+def incrementScore():
+    global score
+    score += 1
+
+
+def resetScore():
+    global score
+    score = 0
 
 
 def checkPause(pause):
@@ -121,7 +132,7 @@ def checkGameClose(gameClose, gameOver, snakeLength):
     while gameClose:
         screen.fill(gameOverBackgroundColor)
         message("You Lost! Press Q-Quit or C-Play Again")
-        yourScore(snakeLength - 1)
+        yourScore(score)
         pygame.display.update()
         gameClose, gameOver, loopAgain = checkQuitOrContinue(
             gameClose, gameOver, loopAgain)
@@ -178,15 +189,18 @@ def gameLoop():
         # Check whether it bites itself
         for block in snakeBody[:-1]:
             if block == snake_head:
-                gameClose = True
+                resetScore()
+                screen.fill(gameOverBackgroundColor)  # Not over, but flash red background
 
         # Ohhh!!! It's growing
         snake(snakeBody)
-        yourScore(snakeLength - 1)
+        yourScore(score)
         pygame.display.update()
 
         # Check whether snake is eating
-        foodX, foodY, snakeLength = checkSnakeAte(x1, y1, foodX, foodY, snakeLength)
+        foodX, foodY, snakeLength, ateFood = checkSnakeAte(x1, y1, foodX, foodY, snakeLength)
+        if ateFood:
+            incrementScore()
 
         # Snake is so active!
         clock.tick(snake_speed)
@@ -221,7 +235,9 @@ snakeBodyColor = lightGray
 foodColor = chocolateBrown
 
 snake_block = 10 # Snake size
-snake_speed = 10 # Snake speed
+snake_speed = 20 # Snake speed
+
+score = 0
 
 # Pygame initial settings
 pygame.init()
