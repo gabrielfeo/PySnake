@@ -21,8 +21,19 @@ import pygame
 from random import randrange
 import time
 
+"""
+Modificação de cores
+Modificação alguma regra do jogo (ex: pontuação ou da forma de pontuar)
+Mudar arquivos assets (imagem/som/gif/sprite) ou textos ou fonts
+Adicionar mais teclas de comando (quanto tem direcional, adicionar WASD ao mesmo tempo)
+Mudar o avanço do jogo (não é mudar o fps)
+Criar elemento novo para o jogo
+Mudar posição de inicio dos heróis ou dos elementos
+"""
+
+
 def yourScore(score):
-    value = scoreFont.render(f'Your Score: {str(score)}', True, yellow)
+    value = scoreFont.render(f'Your Score: {str(score)}', True, scoreTextColor)
     screen.blit(value, [0, 0])
 
 
@@ -32,9 +43,9 @@ def drawSnakeOrFood(color, x, y):
 
 def snake(snakeBody):
     for block in snakeBody[:-1]:
-        drawSnakeOrFood(white, block[0], block[1])
+        drawSnakeOrFood(snakeBodyColor, block[0], block[1])
     block = snakeBody[-1]
-    drawSnakeOrFood(black, block[0], block[1])
+    drawSnakeOrFood(snakeHeadColor, block[0], block[1])
 
 
 def createFood():
@@ -82,7 +93,7 @@ def checkSnakeHitWalls(x1, y1):
 
 def checkPause(pause):
     if pause:
-        message("Game Paused. press 'S' to continue ", white)
+        message("Game Paused. press 'S' to continue ")
         pygame.display.update()
     while pause:
         for event in pygame.event.get():
@@ -108,8 +119,8 @@ def checkQuitOrContinue(gameClose, gameOver, loopAgain):
 def checkGameClose(gameClose, gameOver, snakeLength):
     loopAgain = False
     while gameClose:
-        screen.fill(green)
-        message("You Lost! Press Q-Quit or C-Play Again", white)
+        screen.fill(gameOverBackgroundColor)
+        message("You Lost! Press Q-Quit or C-Play Again")
         yourScore(snakeLength - 1)
         pygame.display.update()
         gameClose, gameOver, loopAgain = checkQuitOrContinue(
@@ -119,11 +130,11 @@ def checkGameClose(gameClose, gameOver, snakeLength):
     return gameClose, gameOver
 
 
-def message(msg, color):
-    messg = fontStyle.render(msg, True, color)
+def message(msg):
+    messg = fontStyle.render(msg, True, messageColor)
     screen.blit(messg, [width / 5, height / 3])
 
-# Main game loop 
+# Main game loop
 def gameLoop():
     # Initial position of snake
     x1 = width / 2
@@ -153,10 +164,10 @@ def gameLoop():
         gameClose = checkSnakeHitWalls(x1, y1)
 
         # Fill backfround with grass
-        screen.fill(green)
+        screen.fill(inGameBackgroundColor)
 
         # put snake's fav BLUEsect
-        drawSnakeOrFood(blue, foodX, foodY)
+        drawSnakeOrFood(foodColor, foodX, foodY)
 
         # Take snake's head for each loop until it's not eating
         snake_head = [x1, y1]
@@ -179,9 +190,9 @@ def gameLoop():
 
         # Snake is so active!
         clock.tick(snake_speed)
-        
+
     # GoodBye! Miss you poison!!!
-    message("Quiting Game", white)
+    message("Quiting Game")
     pygame.display.update()
     time.sleep(2.5)
     pygame.quit()
@@ -195,8 +206,17 @@ white = (255, 255, 255)
 yellow = (255, 255, 102)
 black = (0, 0, 0)
 red = (213, 50, 80)
-green = (5,102,8)
+green = (5, 102, 8)
 blue = (50, 153, 213)
+
+# Color resources
+inGameBackgroundColor = green
+gameOverBackgroundColor = green
+scoreTextColor = yellow
+messageColor = white
+snakeHeadColor = black
+snakeBodyColor = white
+foodColor = blue
 
 snake_block = 10 # Snake size
 snake_speed = 10 # Snake speed
