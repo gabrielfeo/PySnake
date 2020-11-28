@@ -54,8 +54,9 @@ def createFood():
     return foodX, foodY
 
 
-def findDirection(x1_change, y1_change, gameOver):
+def checkEvents(x1_change, y1_change, gameOver):
     pause = False
+    speedChange = 0
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             gameOver = True
@@ -76,7 +77,12 @@ def findDirection(x1_change, y1_change, gameOver):
                 pause = True
             elif event.key == pygame.K_s:
                 pause = False
-    return (x1_change, y1_change, gameOver, pause)
+            elif event.key == pygame.K_RIGHTBRACKET:
+                speedChange = speedChangeUnit
+            elif event.key == pygame.K_LEFTBRACKET:
+                speedChange = -speedChangeUnit
+    print(f"returning from checkEvents with gameOver={gameOver}")
+    return x1_change, y1_change, speedChange, gameOver, pause
 
 
 def isUpCommand(key):
@@ -118,6 +124,11 @@ def resetScore():
     score = 0
 
 
+def changeSnakeSpeed(change):
+    global snake_speed
+    snake_speed = max(1, snake_speed + change)
+
+
 def checkPause(pause):
     if pause:
         message("Game Paused. press 'S' to continue ")
@@ -140,6 +151,7 @@ def checkQuitOrContinue(gameClose, gameOver, loopAgain):
                 gameOver = True
             if event.key == pygame.K_c:
                 loopAgain = True
+    print(f"returning from checkQuitOrContinue with gameOver={gameOver}")
     return gameClose, gameOver, loopAgain
 
 
@@ -183,9 +195,11 @@ def gameLoop():
         gameClose, gameOver = checkGameClose(gameClose, gameOver, snakeLength)
 
         # Get change in snake movement
-        x1_change, y1_change, gameOver, pause = findDirection(x1_change, y1_change, gameOver)
+        eventReactions = checkEvents(x1_change, y1_change, gameOver)
+        x1_change, y1_change, speedChange, gameOver, pause = eventReactions
         x1 += x1_change
         y1 += y1_change
+        changeSnakeSpeed(speedChange)
 
         # Check Snake hits the wall
         gameClose = checkSnakeHitWalls(x1, y1)
@@ -252,6 +266,7 @@ foodColor = chocolateBrown
 
 snake_block = 10 # Snake size
 snake_speed = 20 # Snake speed
+speedChangeUnit = 2
 
 score = 0
 
