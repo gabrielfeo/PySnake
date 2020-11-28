@@ -60,16 +60,16 @@ def findDirection(x1_change, y1_change, gameOver):
         if event.type == pygame.QUIT:
             gameOver = True
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
+            if isLeftCommand(event.key):
                 x1_change = -snake_block
                 y1_change = 0
-            elif event.key == pygame.K_RIGHT:
+            elif isRightCommand(event.key):
                 x1_change = snake_block
                 y1_change = 0
-            elif event.key == pygame.K_UP:
+            elif isUpCommand(event.key):
                 x1_change = 0
                 y1_change = -snake_block
-            elif event.key == pygame.K_DOWN:
+            elif isDownCommand(event.key):
                 x1_change = 0
                 y1_change = snake_block
             elif event.key == pygame.K_p:
@@ -77,6 +77,22 @@ def findDirection(x1_change, y1_change, gameOver):
             elif event.key == pygame.K_s:
                 pause = False
     return (x1_change, y1_change, gameOver, pause)
+
+
+def isUpCommand(key):
+    return key == pygame.K_UP or key == pygame.K_w
+
+
+def isDownCommand(key):
+    return key == pygame.K_DOWN or key == pygame.K_s
+
+
+def isLeftCommand(key):
+    return key == pygame.K_LEFT or key == pygame.K_a
+
+
+def isRightCommand(key):
+    return key == pygame.K_RIGHT or key == pygame.K_d
 
 
 def checkSnakeAte(snakeX, snakeY, foodX, foodY, snakeLength):
