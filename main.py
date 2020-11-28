@@ -18,7 +18,7 @@
 '''
 
 import pygame
-from random import randrange
+from random import randrange, randint
 import time
 
 """
@@ -176,8 +176,8 @@ def message(msg):
 # Main game loop
 def gameLoop():
     # Initial position of snake
-    x1 = width / 2
-    y1 = height / 2
+    x1 = randint(0, width)
+    y1 = randint(0, height)
     # To detect change in direction
     x1_change = 0
     y1_change = 0
