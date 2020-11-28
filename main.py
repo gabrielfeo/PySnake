@@ -203,20 +203,22 @@ size = width, height = 800, 600
 
 # Color codes
 white = (255, 255, 255)
+lightGray = (200, 200, 200)
+chocolateBrown = (100, 30, 30)
 yellow = (255, 255, 102)
 black = (0, 0, 0)
-red = (213, 50, 80)
+red = (200, 0, 0)
 green = (5, 102, 8)
 blue = (50, 153, 213)
 
 # Color resources
 inGameBackgroundColor = green
-gameOverBackgroundColor = green
+gameOverBackgroundColor = red
 scoreTextColor = yellow
-messageColor = white
-snakeHeadColor = black
-snakeBodyColor = white
-foodColor = blue
+messageColor = black
+snakeHeadColor = white
+snakeBodyColor = lightGray
+foodColor = chocolateBrown
 
 snake_block = 10 # Snake size
 snake_speed = 10 # Snake speed
